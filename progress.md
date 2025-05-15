@@ -3,7 +3,8 @@
 ## Date: 15/05/2025
 
 ### Accomplishments
-- [] Task 1: Install redux on UBELIX
+- [] Install redux on UBELIX
+- [] Trying to install opencv using these instructions: https://hpc-unibe-ch.github.io/software/installing/easybuild/. This will allow us to have it as a 'local' easybuild module. 
 
 
 ### Challenges
@@ -23,6 +24,7 @@
                 - ml FFTW.MPI/3.3.10-gompi-2023a  (using the same as we used for stic)
                 - ml zlib/1.2.11-GCCcore-10.3.0
                 - Also need to load CMake. Trying the newest available: ml CMake/3.29.3-GCCcore-13.3.0
+- Installing opencv using the easybuild 'local' module is only crashing with different versions etc. I think I will end up having to install it locally.
 
 ### Learnings
 - Check WiKi shared by Lucia: https://dubshen.astro.su.se/wiki/index.php/Redux
