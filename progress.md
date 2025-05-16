@@ -1,5 +1,21 @@
 # Daily Progress Log
 
+## Date: 16/05/2025
+
+### Accomplishments
+- [] Install OpenCV module on UBELIX
+- [] Install redux on UBELIX
+- [] Trying to install opencv using these instructions: https://hpc-unibe-ch.github.io/software/installing/easybuild/. This will allow us to have it as a 'local' easybuild module. 
+
+
+### Challenges
+- Still working on installing OpenCV on UBELIX as a local module. It always crashes somewhere but I cannot get the error... trying different versions of the OpenCV module now.
+
+### Learnings
+- Check WiKi shared by Lucia: https://dubshen.astro.su.se/wiki/index.php/Redux
+
+---
+
 ## Date: 15/05/2025
 
 ### Accomplishments
