@@ -28,19 +28,21 @@
             ```
         - Now for **redux** we need to load all modules and indicate to CMAKE where is OpenCV installed locally.
             ```
-            #Inside redux folder create a build directory:
+            # Inside redux folder create a build directory:
             mkdir build && cd build
 
-            #cmake and indicate the location of OpenCV locally. The following should work everywhere...
-            #Lets inform our system of another location for shared libraries
+            # cmake and indicate the location of OpenCV locally. The following should work everywhere...
+            # Lets inform our system of another location for shared libraries
             export LD_LIBRARY_PATH=$HOME/opt/opencv-install/lib:$LD_LIBRARY_PATH
-            #Lets inform CMake where to find OpenCV’s config file
+            # Lets inform CMake where to find OpenCV’s config file
             cmake .. \
                 -DOpenCV_DIR=$HOME/opt/opencv-install/lib/cmake/opencv4 \
                 -DCMAKE_PREFIX_PATH=$HOME/opt/opencv-install
+            make -j 8
+
             ```
 
-            make -j 8
+            
 
 
 
