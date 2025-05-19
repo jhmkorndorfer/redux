@@ -7,21 +7,26 @@
     - Steps to achieve that again:
         - Before compiling redux on UBELIX we need to install **OpenCV**:
             ``` 
+            mkdir -p $HOME/opt/opencv
+            cd $HOME/opt
+
             wget https://github.com/opencv/opencv/archive/4.5.5.tar.gz
             tar -xzf 4.5.5.tar.gz
             cd opencv-4.5.5
 
             mkdir build && cd build
 
+            ml Boost.MPI/1.76.0-gompi-2021a GSL/2.8-GCC-13.3.0 CFITSIO/4.4.1-GCCcore-13.3.0 FFTW.MPI/3.3.10-gompi-2023a zlib/1.2.11-GCCcore-10.3.0 CMake/3.29.3-GCCcore-13.3.0
+            ml Eigen/3.4.0-GCCcore-13.3.0
 
             cmake .. \
-                -DCMAKE_BUILD_TYPE=Release \
-                -DCMAKE_INSTALL_PREFIX=$HOME/opt/opencv-install \
-                -DBUILD_LIST=core,imgcodecs,imgproc,highgui \
-                -DBUILD_EXAMPLES=OFF \
-                -DBUILD_TESTS=OFF \
-                -DBUILD_PERF_TESTS=OFF \
-                -DBUILD_opencv_python=OFF
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=$HOME/opt/opencv-install \
+            -DBUILD_LIST=core,imgcodecs,imgproc,highgui,features2d,calib3d,video,photo,flann \
+            -DBUILD_EXAMPLES=OFF \
+            -DBUILD_TESTS=OFF \
+            -DBUILD_PERF_TESTS=OFF \
+            -DBUILD_opencv_python=OFF
 
             make -j 8
             make install
@@ -42,16 +47,12 @@
 
             ```
 
-            
-
-
-
+ 
 ### Challenges
-- Still working on installing OpenCV on UBELIX as a local module. It always crashes somewhere but I cannot get the error... trying different versions of the OpenCV module now.
-    - [] Install OpenCV module on UBELIX. That is going to remain here for a while. Could not make this work using these instructions: https://hpc-unibe-ch.github.io/software/installing/easybuild/. 
+- How to run it?
 
 ### Learnings
-- Check WiKi shared by Lucia: https://dubshen.astro.su.se/wiki/index.php/Redux
+- 
 
 ---
 
@@ -78,7 +79,7 @@
                 - ml FFTW.MPI/3.3.10-gompi-2023a  (using the same as we used for stic)
                 - ml zlib/1.2.11-GCCcore-10.3.0
                 - Make it easy for copy pasta:
-                    - ml Boost.MPI/1.76.0-gompi-2021a GSL/2.8-GCC-13.3.0 CFITSIO/4.4.1-GCCcore-13.3.0 FFTW.MPI/3.3.10-gompi-2023a zlib/1.2.11-GCCcore-10.3.0 CMake/3.29.3-GCCcore-13.3.0
+                    - ml Boost.MPI/1.76.0-gompi-2021a GSL/2.8-GCC-13.3.0 CFITSIO/4.4.1-GCCcore-13.3.0 FFTW.MPI/3.3.10-gompi-2023a zlib/1.2.11-GCCcore-10.3.0 CMake/3.29.3-GCCcore-13.3.0 Eigen/3.4.0-GCCcore-13.3.0
 - Installing opencv using the easybuild 'local' module is only crashing with different versions etc. I think I will end up having to install it locally.
 
 ### Learnings
