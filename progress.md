@@ -1,22 +1,6 @@
 # Daily Progress Log
 
-## Date: 16/05/2025
-
-### Accomplishments
-- [] Install redux on UBELIX
-
-
-
-### Challenges
-- Still working on installing OpenCV on UBELIX as a local module. It always crashes somewhere but I cannot get the error... trying different versions of the OpenCV module now.
-    - [] Install OpenCV module on UBELIX. That is going to remain here for a while. Could not make this work using these instructions: https://hpc-unibe-ch.github.io/software/installing/easybuild/. 
-
-### Learnings
-- Check WiKi shared by Lucia: https://dubshen.astro.su.se/wiki/index.php/Redux
-
----
-
-## Date: 15/05/2025
+## Date: 19/05/2025
 
 ### Accomplishments
 - [x] Install redux on UBELIX
@@ -58,6 +42,23 @@
 
             make -j 8
 
+
+
+### Challenges
+- Still working on installing OpenCV on UBELIX as a local module. It always crashes somewhere but I cannot get the error... trying different versions of the OpenCV module now.
+    - [] Install OpenCV module on UBELIX. That is going to remain here for a while. Could not make this work using these instructions: https://hpc-unibe-ch.github.io/software/installing/easybuild/. 
+
+### Learnings
+- Check WiKi shared by Lucia: https://dubshen.astro.su.se/wiki/index.php/Redux
+
+---
+
+## Date: 16/05/2025
+
+### Accomplishments
+- [] Install redux on UBELIX
+
+
 ### Challenges
 - Figure it out which modules on UBELIX will Fulfill the dependencies of redux.
     - 1st try using module avail to check where I can find the dependencies:
@@ -82,7 +83,7 @@
 - 
 
 
-## Date: 16/05/2025
+## Date: 15/05/2025
 
 ### Accomplishments
 - [] Install OpenCV module on UBELIX
