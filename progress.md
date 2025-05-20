@@ -3,13 +3,26 @@
 ## Date: 20/05/2025
 
 ### Accomplishments
-- [] Generate call graph
+- [x] Generate call graph at least starting from main function to have an idea of code paths...
+    - redux has several main files each for different parts of the code that seem to have to be executed at the same time. 
+        - redux Master main, **reduxd.cpp**
+            ![Call graph starting at main](reduxd-main.png)
+        - redux Worker main, **rsub.cpp**
+            ![Call graph starting at main](rsub-main.png)
+        - redux Stat for checking run status, **rstat.cpp**
+            ![Call graph starting at main](rstat-main.png)
+        - **rdel.cpp** not sure yet what it does
+            ![Call graph starting at main](rdel-main.png)
+        - **rctl.cpp** not sure yet what it does
+            ![Call graph starting at main](rctl-main.png)
 
 ### Challenges
 - How to run it?
 
+
 ### Learnings
-- 
+- Check input test data at: https://sml.unige.ch/nextcloud/apps/files/?dir=/redux_testdata&fileid=20645#
+- Check email with instructions / example.
 
 ---
 
