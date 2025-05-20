@@ -1,5 +1,19 @@
 # Daily Progress Log
 
+## Date: 20/05/2025
+
+### Accomplishments
+- [] Generate call graph
+
+### Challenges
+- How to run it?
+
+### Learnings
+- 
+
+---
+
+
 ## Date: 19/05/2025
 
 ### Accomplishments
@@ -31,7 +45,7 @@
             make -j 8
             make install
             ```
-        - Now for **redux** we need to load all modules and indicate to CMAKE where is OpenCV installed locally.
+        - Now for **redux** we need to load all modules (same as above) and indicate to CMAKE where is OpenCV installed locally.
             ```
             # Inside redux folder create a build directory:
             mkdir build && cd build
