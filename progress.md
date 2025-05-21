@@ -1,5 +1,115 @@
 # Daily Progress Log
 
+## Date: 21/05/2025
+
+### Accomplishments
+- [] Install redux on sml.
+    - On SML we need to also install OpenCV locally and also CFITSIO. Below goes a full step by step to install redux on SML:
+    - FOR OpenCV
+        ``` 
+        mkdir -p $HOME/opt/opencv
+        cd $HOME/opt
+
+        wget https://github.com/opencv/opencv/archive/4.5.5.tar.gz
+        tar -xzf 4.5.5.tar.gz
+        cd opencv-4.5.5
+
+        mkdir build && cd build
+
+        ml Boost.MPI/1.76.0-gompi-2021a GSL/2.8-GCC-13.3.0 CFITSIO/4.4.1-GCCcore-13.3.0 FFTW.MPI/3.3.10-gompi-2023a zlib/1.2.11-GCCcore-10.3.0 CMake/3.29.3-GCCcore-13.3.0
+        ml Eigen/3.4.0-GCCcore-13.3.0
+
+        cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=$HOME/opt/opencv-install \
+        -DBUILD_LIST=core,imgcodecs,imgproc,highgui,features2d,calib3d,video,photo,flann \
+        -DBUILD_EXAMPLES=OFF \
+        -DBUILD_TESTS=OFF \
+        -DBUILD_PERF_TESTS=OFF \
+        -DBUILD_opencv_python=OFF
+
+        make -j 8
+        make install
+        ```
+    - FOR CFITSIO
+        ```
+        cd $HOME/opt
+        wget https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio_latest.tar.gz
+        tar -xzf cfitsio_latest.tar.gz
+        cd cfitsio
+        ./configure --prefix=$HOME/opt/cfitsio-install
+        make -j$(nproc)
+        make install
+        ```
+    - FOR BOOST
+        ```
+        cd $HOME/opt
+        wget https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz
+        tar -xzf boost_1_88_0.tar.gz
+        cd boost_1_88_0
+
+        ./bootstrap.sh --prefix=$HOME/opt/boost-install
+        ./b2 install -j 16
+        ```
+    - FOR redux
+        ```
+        #Go to redux folder
+
+        mkdir build && cd build
+
+        export LD_LIBRARY_PATH=$HOME/opt/boost-install/lib:$HOME/opt/opencv-install/lib:$HOME/opt/cfitsio-install/lib:$LD_LIBRARY_PATH
+
+        export CPATH=$HOME/opt/boost-install/include:$CPATH
+
+        cmake .. \
+        -DOpenCV_DIR=$HOME/opt/opencv-install/lib/cmake/opencv4 \
+        -DCMAKE_PREFIX_PATH="$HOME/opt/opencv-install;$HOME/opt/cfitsio-install;$HOME/opt/boost-install" \
+        -DCMAKE_INCLUDE_PATH="$HOME/opt/cfitsio-install/include;$HOME/opt/boost-install/include" \
+        -DCMAKE_LIBRARY_PATH="$HOME/opt/cfitsio-install/lib;$HOME/opt/boost-install/lib" \
+        -DBoost_NO_SYSTEM_PATHS=ON \
+        -DBOOST_ROOT=$HOME/opt/boost-install \
+        -DBoost_DEBUG=ON
+
+        make -j 8
+        ```
+- [] Run redux on sml with the test input below.
+
+### Challenges
+- For sml I installed the newest boost library. This caused a problem where I had to update the code since some boost classes changed name in the meanwhile. Basically I needed to find eveywhere in the code where **io_service was used and substitue for io_context**. The code below should do it...
+```
+# FOR MAC
+# update io_service to context
+find ./ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" -o -name "*.cc" \) \
+  -exec sed -i '' 's/boost::asio::io_service/boost::asio::io_context/g' {} \;
+
+# update work class
+find ./ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
+  -exec sed -i '' 's#boost::asio::io_context::work#boost::asio::executor_work_guard<boost::asio::io_context::executor_type>#g' {} \;
+
+# update work class
+find ./ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
+  -exec sed -i '' 's#new boost::asio::io_context::work#boost::asio::make_work_guard#g' {} \;
+
+# update post class
+find ./ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
+  -exec sed -i '' 's/\([a-zA-Z_][a-zA-Z0-9_]*\)\.post[[:space:]]*(/boost::asio::post(\1, /g' {} \;
+
+# update reset - restart
+find ./ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
+  -exec sed -i '' -E 's/([a-zA-Z_][a-zA-Z0-9_]*)\.reset[[:space:]]*\(/\\1.restart(/g' {} \;
+
+
+
+```
+- How to run it?
+
+
+### Learnings
+- Check input test data at: https://sml.unige.ch/nextcloud/apps/files/?dir=/redux_testdata&fileid=20645#
+- Check email with instructions / example.
+
+---
+
 ## Date: 20/05/2025
 
 ### Accomplishments
