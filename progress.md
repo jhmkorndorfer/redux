@@ -96,8 +96,7 @@ find ./ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
 
 # update reset - restart
 find ./ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
-  -exec sed -i '' -E 's/([a-zA-Z_][a-zA-Z0-9_]*)\.reset[[:space:]]*\(/\\1.restart(/g' {} \;
-
+  -exec sed -i '' -E 's/\b(ioService|ioContext|ctx)\.reset\(/\1.restart(/g' {} \;
 
 
 ```
