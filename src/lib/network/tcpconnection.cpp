@@ -3,6 +3,8 @@
 #include "redux/logging/logger.hpp"
 #include "redux/util/datautil.hpp"
 #include "redux/util/stringutil.hpp"
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/bind/bind.hpp>
 
 #include <thread>
 
@@ -42,7 +44,8 @@ namespace {
 }
 
 
-TcpConnection::TcpConnection( ba::io_service& io_service )
+//TcpConnection::TcpConnection( ba::io_service& io_service )
+TcpConnection::TcpConnection(boost::asio::io_context& io_service)
     : activityCallback( nullptr ), urgentCallback( nullptr ), errorCallback( nullptr ), mySocket( io_service ),
     myService( io_service ), swapEndian_(false), urgentData(0), urgentActive(false), id( getID() ) {
 #ifdef DBG_NET_
@@ -159,32 +162,59 @@ void TcpConnection::writeline( const string& line ) {
 }
 
 
-void TcpConnection::connect( string host, string service ) {
+// void TcpConnection::connect( string host, string service ) {
     
-    if( host == "" ) host = "localhost";
+//     if( host == "" ) host = "localhost";
+
+//     try {
+//         //ba::ip::tcp::resolver::query query( host, service );
+//         //ba::ip::tcp::resolver resolver( myService );
+//         //ba::ip::tcp::resolver::iterator destination = resolver.resolve( query );
+//         //ba::ip::tcp::resolver::iterator end ;
+//         //ba::ip::tcp::endpoint endpoint;
+// 	boost::asio::ip::tcp::resolver resolver(ioService);
+// 	auto results = resolver.resolve(host, service);
+//         //while( destination != end ) {
+// 	for (auto it = results.begin(); it != results.end(); ++it){
+//             try {
+//                 mySocket.connect( *destination++ );
+//             } catch ( const boost::system::system_error& ) {
+//                 mySocket.close();
+//             }
+//             if( mySocket.is_open() ) return;
+//         }
+//     } catch ( ... ) {
+//         // TODO 
+//     }
+    
+//     close();
+
+// }
+
+void TcpConnection::connect(std::string host, std::string service) {
+
+    if (host.empty()) host = "localhost";
 
     try {
-        ba::ip::tcp::resolver::query query( host, service );
-        ba::ip::tcp::resolver resolver( myService );
-        ba::ip::tcp::resolver::iterator destination = resolver.resolve( query );
-        ba::ip::tcp::resolver::iterator end ;
-        ba::ip::tcp::endpoint endpoint;
+        boost::asio::ip::tcp::resolver resolver(myService);
+        auto results = resolver.resolve(host, service);
 
-        while( destination != end ) {
+        for (const auto& endpoint : results) {
             try {
-                mySocket.connect( *destination++ );
-            } catch ( const boost::system::system_error& ) {
+                mySocket.connect(endpoint);
+            } catch (const boost::system::system_error&) {
                 mySocket.close();
+                continue;
             }
-            if( mySocket.is_open() ) return;
+            if (mySocket.is_open()) return;
         }
-    } catch ( ... ) {
-        // TODO 
+    } catch (...) {
+        // TODO: proper error handling/logging
     }
-    
-    close();
 
+    close();
 }
+
 
 
 void TcpConnection::close( void ) {
@@ -250,7 +280,7 @@ void TcpConnection::urgentHandler( const boost::system::error_code& ec, size_t t
             //LOG_DEBUG << "Activity on connection \"" << connptr->socket().remote_endpoint().address().to_string() << "\"";
             if( mySocket.is_open() ) {
                 std::thread( urgentCallback, shared_from_this() ).detach();
-                //myService.post( std::bind( urgentCallback, shared_from_this() ) );
+                //boost::asio::post(myService,  std::bind( urgentCallback, shared_from_this() ) );
             }
         }
     } else {
@@ -301,7 +331,7 @@ void TcpConnection::onActivity( const boost::system::error_code& ec, size_t tran
             //LOG_DEBUG << "Activity on connection \"" << connptr->socket().remote_endpoint().address().to_string() << "\"";
             if( mySocket.is_open() ) {
                 std::thread( activityCallback, shared_from_this() ).detach();
-                //myService.post( std::bind( activityCallback, shared_from_this() ) );
+                //boost::asio::post(myService,  std::bind( activityCallback, shared_from_this() ) );
             }
         }
     } else {

@@ -40,7 +40,8 @@ void Worker::start( void ) {
         wip->reset();
     }
     
-    daemon.ioService.post( std::bind(&Worker::run, this) );
+    //daemon.boost::asio::post(ioService,  std::bind(&Worker::run, this) );
+    boost::asio::post(daemon.ioService, std::bind(&Worker::run, this));
 
     myInfo.touch();
     myInfo.active();

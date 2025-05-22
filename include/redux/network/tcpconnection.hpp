@@ -67,7 +67,7 @@ namespace redux {
             ~TcpConnection( void );
 
 
-            static Ptr newPtr( boost::asio::io_service& io_service ) {
+            static Ptr newPtr( boost::asio::io_context& io_service ) {
                 return Ptr( new TcpConnection( io_service ) );
             }
 
@@ -150,14 +150,14 @@ namespace redux {
             }
 
        private:
-            TcpConnection( boost::asio::io_service& io_service );
+            TcpConnection( boost::asio::io_context& io_service );
             TcpConnection( const TcpConnection& ) = delete;
 
             callback activityCallback;
             callback urgentCallback;
             callback errorCallback;
             tcp::socket mySocket;
-            boost::asio::io_service& myService;
+            boost::asio::io_context& myService;
             bool swapEndian_;
             uint8_t urgentData;
             bool urgentActive;

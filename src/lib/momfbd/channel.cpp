@@ -558,7 +558,7 @@ void Channel::initChannel (void) {
 }
 
 
-void Channel::loadCalib( boost::asio::io_service& service ) {     // load through cache-functionality, so the same data is recycled for other objects
+void Channel::loadCalib( boost::asio::io_context& service ) {     // load through cache-functionality, so the same data is recycled for other objects
 
     //LOG_TRACE << "Channel::loadCalib() << ende";
     // TODO: absolute/relative paths
@@ -644,7 +644,7 @@ void Channel::loadCalib( boost::asio::io_service& service ) {     // load throug
 }
 
 
-void Channel::loadData( boost::asio::io_service& service, redux::util::Array<PatchData::Ptr>& patches ) {
+void Channel::loadData( boost::asio::io_context& service, redux::util::Array<PatchData::Ptr>& patches ) {
 
     size_t nFiles = std::max<size_t>( 1, fileNumbers.size() );       // If no numbers, load template as single file
 
@@ -678,7 +678,7 @@ void Channel::loadData( boost::asio::io_service& service, redux::util::Array<Pat
     });
     for( unsigned int y=0; y<patches.dimSize(0); ++y ) {
         for( unsigned int x=0; x<patches.dimSize(1); ++x ) {
-            service.post( [this,&patches,y,x]() {
+            boost::asio::post(service,  [this,&patches,y,x]() {
                 auto oData = patches(y,x)->getObjectData(myObject.ID);
                 if( !oData ) throw runtime_error("patches(y,x)->getObjectData() returned a null pointer !");
                 auto chData = oData->channels[ID];
@@ -690,14 +690,14 @@ void Channel::loadData( boost::asio::io_service& service, redux::util::Array<Pat
     
     size_t nPreviousFrames(0);
     for( size_t i=0; i<nFiles; ++i ) {
-        service.post( [&,i,nPreviousFrames,saveFFData](){
+        boost::asio::post(service,  [&,i,nPreviousFrames,saveFFData](){
             try {
                 loadFile(i,nPreviousFrames);
                 if( imgSize.y < 1 || imgSize.x < 1 ) throw logic_error("Image size is zero.");
                 size_t nF = nFrames[i];
                 for( size_t j=0; j<nF; ++j ) {
                     preprocessImage( nPreviousFrames+j );
-                    //service.post(std::bind( &Channel::preprocessImage, this, nPreviousFrames+j) );
+                    //boost::asio::post(service, std::bind( &Channel::preprocessImage, this, nPreviousFrames+j) );
                 }
                 if( saveFFData ) {
                     bfs::path fn;

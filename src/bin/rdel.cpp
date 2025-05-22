@@ -99,7 +99,7 @@ int main( int argc, char *argv[] ) {
             return EXIT_SUCCESS;
         }
         
-        boost::asio::io_service ioservice;
+        boost::asio::io_context ioservice;
         auto conn = TcpConnection::newPtr( ioservice );
         conn->connect( vm["master"].as<string>(), vm["port"].as<string>() );
 

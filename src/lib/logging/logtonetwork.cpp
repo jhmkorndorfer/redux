@@ -8,7 +8,7 @@ using namespace redux::util;
 using namespace std;
 
 
-LogToNetwork::LogToNetwork( boost::asio::io_service& s, const network::Host::Ptr& h, uint32_t i, uint8_t m, unsigned int flushPeriod)
+LogToNetwork::LogToNetwork( boost::asio::io_context& s, const network::Host::Ptr& h, uint32_t i, uint8_t m, unsigned int flushPeriod)
     : LogOutput(m,flushPeriod), service(s), host(h), id(i) {
 
 

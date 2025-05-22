@@ -47,9 +47,12 @@ void TcpServer::start(void) {
             stop();
         }
         running = true;
-        ioService.reset();
-        workLoop.reset( new boost::asio::io_service::work(ioService) );
-        addThread( minThreads );
+        ioService.restart();
+        //workLoop.reset( new boost::asio::executor_work_guard<boost::asio::io_context::executor_type>(ioService) );
+        workLoop = std::make_shared<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+    	boost::asio::make_work_guard(ioService)
+	);
+	addThread( minThreads );
         acceptor.open(endpoint.protocol());
         acceptor.set_option(tcp::acceptor::reuse_address(true));
         acceptor.bind(endpoint);
@@ -128,7 +131,7 @@ void TcpServer::addThread( uint16_t n ) {
 void TcpServer::delThread( uint16_t n ) {
     
     while( n-- ) {
-        ioService.post( [](){ throw Application::ThreadExit(); } );
+        boost::asio::post(ioService,  [](){ throw Application::ThreadExit(); } );
     }
     
 }

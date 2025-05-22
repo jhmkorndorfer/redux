@@ -215,7 +215,7 @@ int main( int argc, char *argv[] ) {
     bool loop = vm.count( "time" );
     int sorting = by_name;
     try {
-        boost::asio::io_service ioservice;
+        boost::asio::io_context ioservice;
         auto conn = TcpConnection::newPtr( ioservice );
         conn->connect( vm["master"].as<string>(), vm["port"].as<string>() );
 

@@ -237,7 +237,7 @@ LogOutput::Ptr Logger::addFile( const std::string &filename, uint8_t m, bool rep
 }
 
 
-LogOutput::Ptr Logger::addNetwork( boost::asio::io_service& service, const Host::Ptr host, uint32_t id, uint8_t m, unsigned int flushPeriod ) {
+LogOutput::Ptr Logger::addNetwork( boost::asio::io_context& service, const Host::Ptr host, uint32_t id, uint8_t m, unsigned int flushPeriod ) {
     
     LogOutput::Ptr ret;
     if( host->info.connectName.empty() || !host->info.connectPort ) {

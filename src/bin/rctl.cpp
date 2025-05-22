@@ -225,7 +225,7 @@ int main( int argc, char *argv[] ) {
         
         Logger logger( vm );
         
-        boost::asio::io_service ioservice;
+        boost::asio::io_context ioservice;
         auto conn = TcpConnection::newPtr(ioservice);
         conn->connect( vm["master"].as<string>(), vm["port"].as<string>() );
 

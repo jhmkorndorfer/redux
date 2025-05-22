@@ -27,11 +27,11 @@ DirWatch::DirWatch( const std::string &dirname, uint32_t mask ) : fd_( init() ),
 
 void DirWatch::start( void ) {
 
-    work_.reset( new boost::asio::io_service::work(service_) );
+    work_.reset( new boost::asio::executor_work_guard<boost::asio::io_context::executor_type>(service_) );
     begin_read();
     threads_.clear();
     for( int i = 0; i < 1; ++i ) {  // TODO multithreaded (use strand for reading/queueing)
-            threads_.push_back( thread( boost::bind( &boost::asio::io_service::run, &service_) ) );
+            threads_.push_back( thread( boost::bind( &boost::asio::io_context::run, &service_) ) );
     }
 
     running_ = true;
