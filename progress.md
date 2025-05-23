@@ -1,9 +1,124 @@
 # Daily Progress Log
 
+## Date: 22/05/2025
+
+### Accomplishments
+- [x] running redux on SML machine
+    ```
+    #######export SML_HOME=/sml/YOUR_FOLDER_UNDER_SLASH_SML
+
+    # Start master
+    $SML_HOME/redux-new/redux/build/src/bin/reduxd -p 7801 -C $SML_HOME/gregor-mfbd/raw_data -vvv -L -t 20 $SML_HOME/gregor-mfbd/momfbd/manager.log
+
+    # Start workers
+    $SML_HOME/redux-new/redux/build/src/bin/reduxd -m sml -p 7801 -v -t 20
+
+    # Start a job
+    $SML_HOME/redux-new/redux/build/src/bin/rdx_sub --port 7801 -c $SML_HOME/gregor-mfbd/momfbd/gregor_F0010_M0060.cfg
+
+    # Check redux/jobs status
+    $SML_HOME/redux-new/redux/build/src/bin/rdx_stat --port 7801 -j
+
+    # Kill all jobs
+    $SML_HOME/redux-new/redux/build/src/bin/rdx_del --port 7801 -k -s all
+
+    ```
+- [x] **Install redux SIMPLE**
+    ```
+    #######export SML_HOME=/sml/YOUR_FOLDER_UNDER_SLASH_SML
+    cd $SML_HOME
+    mkdir redux/build
+    cd redux/build
+    cmake ../
+    make -j 6 
+    ```
+
+- [x] **With Local Libs Still Broken, Probably CFITSIO** Install redux on sml using old boost
+    - FOR OpenCV
+        ``` 
+        #######export SML_HOME=/sml/YOUR_FOLDER_UNDER_SLASH_SML
+        mkdir -p $SML_HOME/opt/opencv
+        cd $SML_HOME/opt
+
+        wget https://github.com/opencv/opencv/archive/4.5.5.tar.gz
+        tar -xzf 4.5.5.tar.gz
+        cd opencv-4.5.5
+
+        mkdir build && cd build
+
+        ml Boost.MPI/1.76.0-gompi-2021a GSL/2.8-GCC-13.3.0 CFITSIO/4.4.1-GCCcore-13.3.0 FFTW.MPI/3.3.10-gompi-2023a zlib/1.2.11-GCCcore-10.3.0 CMake/3.29.3-GCCcore-13.3.0
+        ml Eigen/3.4.0-GCCcore-13.3.0
+
+        cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=$SML_HOME/opt/opencv-install \
+        -DBUILD_LIST=core,imgcodecs,imgproc,highgui,features2d,calib3d,video,photo,flann \
+        -DBUILD_EXAMPLES=OFF \
+        -DBUILD_TESTS=OFF \
+        -DBUILD_PERF_TESTS=OFF \
+        -DBUILD_opencv_python=OFF
+
+        make -j 24
+        make install
+        ```
+    - FOR CFITSIO
+        ```
+        cd $SML_HOME/opt
+        wget https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio_latest.tar.gz
+        tar -xzf cfitsio_latest.tar.gz
+        cd cfitsio-4.6.2
+        ./configure --prefix=$SML_HOME/opt/cfitsio-install
+        make -j 24
+        make install
+        ```
+    - FOR BOOST **Older than 1.78 to avoid issues**
+        ```
+        cd $SML_HOME/opt
+        wget https://archives.boost.io/release/1.76.0/source/boost_1_76_0.tar.gz
+        tar -xzf boost_1_76_0.tar.gz
+        cd boost_1_76_0
+
+        ./bootstrap.sh --prefix=$SML_HOME/opt/boost-install
+        ./b2 install -j 4
+        ```
+    - FOR redux
+        ```
+        #Go to redux folder
+
+        cd $SML_HOME/redux
+
+        mkdir build && cd build
+
+        export LD_LIBRARY_PATH=$SML_HOME/opt/boost-install/lib:$SML_HOME/opt/opencv-install/lib:$SML_HOME/opt/cfitsio-install/lib:$LD_LIBRARY_PATH
+
+        export CPATH=$SML_HOME/opt/boost-install/include:$CPATH
+
+        cmake .. \
+        -DOpenCV_DIR=$SML_HOME/opt/opencv-install/lib/cmake/opencv4 \
+        -DCMAKE_PREFIX_PATH="$SML_HOME/opt/opencv-install;$SML_HOME/opt/cfitsio-install;$SML_HOME/opt/boost-install" \
+        -DCMAKE_INCLUDE_PATH="$SML_HOME/opt/cfitsio-install/include;$SML_HOME/opt/boost-install/include" \
+        -DCMAKE_LIBRARY_PATH="$SML_HOME/opt/cfitsio-install/lib;$SML_HOME/opt/boost-install/lib" \
+        -DBoost_NO_SYSTEM_PATHS=ON \
+        -DBOOST_ROOT=$SML_HOME/opt/boost-install \
+        -DBoost_DEBUG=ON
+
+        make -j 8
+        ```
+    
+### Challenges
+
+### Learnings
+- Check input test data at: https://sml.unige.ch/nextcloud/apps/files/?dir=/redux_testdata&fileid=20645#
+- Check email with instructions / example.
+
+---
+
+
 ## Date: 21/05/2025
 
 ### Accomplishments
-- [] Install redux on sml.
+- [x] Install redux on sml **OUTDATED MOVING EVERYTHING TO /SML FOLDER, DO NOT USE HOME**.
+    - **DO NOT USE HOME UPDATES ABOVE**
     - On SML we need to also install OpenCV locally and also CFITSIO. Below goes a full step by step to install redux on SML:
     - FOR OpenCV
         ``` 
@@ -72,9 +187,12 @@
 
         make -j 8
         ```
-- [] Run redux on sml with the test input below.
 
-### Challenges
+### Challenges (check branch redux-updated-boostLib)
+
+**Branch with the modifications for redux with newer >> 1.7 boost version**
+**https://github.com/jhmkorndorfer/redux/tree/redux-updated-boostLib**
+
 - For sml I installed the newest boost library. This caused a problem where I had to update the code since some boost classes changed name in the meanwhile. Basically I needed to find eveywhere in the code where **io_service was used and substitue for io_context**. The code below should do it...
 ```
 # FOR MAC
@@ -97,9 +215,9 @@ find ./ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
 # update reset - restart
 find ./ -type f \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
   -exec sed -i '' -E 's/\b(ioService|ioContext|ctx)\.reset\(/\1.restart(/g' {} \;
-
-
 ```
+- Apart from this a lot of other changes were needed... Branch created to store the changes.
+
 - How to run it?
 
 
