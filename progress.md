@@ -1,5 +1,15 @@
 # Daily Progress Log
 
+## Date: 04/07/2025
+
+### Accomplishments
+- [] Installing redux on UBELIX
+    
+### Challenges
+
+### Learnings
+---
+
 ## Date: 22/05/2025
 
 ### Accomplishments
