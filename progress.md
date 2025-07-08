@@ -1,9 +1,127 @@
 # Daily Progress Log
 
+## Date: 08/07/2025
+
+### Accomplishments
+- [x] Trying with interactive terminal
+    - salloc --job-name="test redux" --nodes=1 --ntasks=1 --time=01:00:00 --cpus-per-task=20 --partition=epyc2
+    - srun --pty bash
+
+- [x] Trying to run redux on ubelix/slurm. Starting with single node:
+```
+#SBATCH --job-name="test redux"
+#SBATCH --time=00:45:00
+#SBATCH --partition=epyc2
+##SBATCH --qos=job_icpu-aiub
+##SBATCH --mem-per-cpu=2G
+#SBATCH --ntasks=20
+#SBATCH --cpus-per-task=1
+##SBATCH --mail-user=
+##SBATCH --mail-type=end,fail
+#SBATCH --verbose
+##SBATCH --nodes=1
+##SBATCH --nodelist=bnode[001-011]
+##SBATCH --exclude=bnode[001-028] # bnode002,bnode003,bnode004,bnode005,bnode006,bnode007,bnode008,bnode009,bnode010,bnode011
+##Your code below this line
+##HPC_WORKSPACE=aiub_sml_ws module load Workspace
+
+ml Boost.MPI/1.76.0-gompi-2021a GSL/2.8-GCC-13.3.0 CFITSIO/4.4.1-GCCcore-13.3.0 FFTW.MPI/3.3.10-gompi-2023a zlib/1.2.11-GCCcore-10.3.0 CMake/3.29.3-GCCcore-13.3.0
+ml Eigen/3.4.0-GCCcore-13.3.0
+
+export LD_LIBRARY_PATH=$HOME/opt/opencv-install/lib:$LD_LIBRARY_PATH
+
+# Start master
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/reduxd -p 7801 -C /storage/homefs/jm25l251/gregor-mfbd/raw_data -vvv -L -t 20 $SML_HOME/gregor-mfbd/momfbd/manager.log
+
+sleep 4
+
+# Start workers
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/reduxd -m sml -p 7801 -v -t 20
+
+sleep 4
+
+# Start a job
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/rdx_sub --port 7801 -c /storage/homefs/jm25l251/gregor-mfbd/momfbd/gregor_F0010_M0060.cfg
+
+sleep 4
+
+# Check redux/jobs status
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/rdx_stat --port 7801 -j
+
+# Kill all jobs
+##/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/rdx_del --port 7801 -k -s all
+
+
+```
+
+- Update config!!!
+    - IMAGE_DATA_DIR=/storage/homefs/jm25l251/gregor-mfbd/raw_data/
+    - PUPIL=/storage/homefs/jm25l251/gregor-mfbd/raw_data/pupil.fz
+
+## Date: 07/07/2025
+
+### Accomplishments
+
+- [x] Trying to run redux on ubelix/slurm. Starting with single node ***DOES NOT WORK***:
+```
+#SBATCH --job-name="test redux"
+#SBATCH --time=00:45:00
+#SBATCH --partition=epyc2
+##SBATCH --qos=job_icpu-aiub
+##SBATCH --mem-per-cpu=2G
+#SBATCH --ntasks=20
+#SBATCH --cpus-per-task=1
+##SBATCH --mail-user=
+##SBATCH --mail-type=end,fail
+#SBATCH --verbose
+##SBATCH --nodes=1
+##SBATCH --nodelist=bnode[001-011]
+##SBATCH --exclude=bnode[001-028] # bnode002,bnode003,bnode004,bnode005,bnode006,bnode007,bnode008,bnode009,bnode010,bnode011
+##Your code below this line
+##HPC_WORKSPACE=aiub_sml_ws module load Workspace
+
+ml Boost.MPI/1.76.0-gompi-2021a GSL/2.8-GCC-13.3.0 CFITSIO/4.4.1-GCCcore-13.3.0 FFTW.MPI/3.3.10-gompi-2023a zlib/1.2.11-GCCcore-10.3.0 CMake/3.29.3-GCCcore-13.3.0
+ml Eigen/3.4.0-GCCcore-13.3.0
+
+export LD_LIBRARY_PATH=$HOME/opt/opencv-install/lib:$LD_LIBRARY_PATH
+
+# Start master
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/reduxd -p 7801 -C /storage/homefs/jm25l251/gregor-mfbd/raw_data -vvv -L -t 20 $SML_HOME/gregor-mfbd/momfbd/manager.log
+
+sleep 4
+
+# Start workers
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/reduxd -m sml -p 7801 -v -t 20
+
+sleep 4
+
+# Start a job
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/rdx_sub --port 7801 -c /storage/homefs/jm25l251/gregor-mfbd/momfbd/gregor_F0010_M0060.cfg
+
+sleep 4
+
+# Check redux/jobs status
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/rdx_stat --port 7801 -j
+
+# Kill all jobs
+##/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/rdx_del --port 7801 -k -s all
+
+
+```
+
+- Update config!!!
+    - IMAGE_DATA_DIR=/storage/homefs/jm25l251/gregor-mfbd/raw_data/
+    - PUPIL=/storage/homefs/jm25l251/gregor-mfbd/raw_data/pupil.fz
+    
+### Challenges
+
+### Learnings
+---
+
 ## Date: 04/07/2025
 
 ### Accomplishments
-- [] Installing redux on UBELIX
+- [x] Installing redux on UBELIX
     
 ### Challenges
 
