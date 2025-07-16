@@ -6,6 +6,43 @@
 - [x] Trying with interactive terminal
     - salloc --job-name="test redux" --nodes=1 --ntasks=1 --time=01:00:00 --cpus-per-task=20 --partition=epyc2
     - srun --pty bash
+    - To find a free port:
+        - python -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()'
+
+- [x] Trying this now -m ***HAS TO BE THE NODE NAME***:
+```
+
+ml Boost.MPI/1.76.0-gompi-2021a GSL/2.8-GCC-13.3.0 CFITSIO/4.4.1-GCCcore-13.3.0 FFTW.MPI/3.3.10-gompi-2023a zlib/1.2.11-GCCcore-10.3.0 CMake/3.29.3-GCCcore-13.3.0
+ml Eigen/3.4.0-GCCcore-13.3.0
+
+export LD_LIBRARY_PATH=$HOME/opt/opencv-install/lib:$LD_LIBRARY_PATH
+
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/reduxd -p 60315 -C /storage/homefs/jm25l251/gregor-mfbd/raw_data -vvv -L -t 20 $SML_HOME/gregor-mfbd/momfbd/manager.log
+
+
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/reduxd -m bnode006 -p 60315 -v -t 20
+
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/rdx_sub --port 60315 -c /storage/homefs/jm25l251/gregor-mfbd/momfbd/gregor_F0010_M0060.cfg
+
+/storage/homefs/jm25l251/apps-unibe/redux/build/src/bin/rdx_stat --port 60315 -j -s
+
+
+```
+
+- Update config!!!
+    - IMAGE_DATA_DIR=/storage/homefs/jm25l251/gregor-mfbd/raw_data/
+    - PUPIL=/storage/homefs/jm25l251/gregor-mfbd/raw_data/pupil.fz
+
+
+
+
+
+## Date: 08/07/2025
+
+### Accomplishments
+- [x] Trying with interactive terminal
+    - salloc --job-name="test redux" --nodes=1 --ntasks=1 --time=01:00:00 --cpus-per-task=20 --partition=epyc2
+    - srun --pty bash
 
 - [x] Trying to run redux on ubelix/slurm. Starting with single node:
 ```
